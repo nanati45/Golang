@@ -5,19 +5,18 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"unicode"
 )
 
 func palindromeCheck(s string) bool {
 	
 	s = strings.ToLower(s)
-
 	
-	var ss string
+	var ss []rune
 	for _ , word := range s {
 		
-		ch := rune(word)
-		if ch >= 65 && ch < 96 {
-			ss += string(word)
+		if unicode.IsLetter(word) || unicode.IsNumber(word) {
+			ss = append(ss, word)
 		}
 
 	}
@@ -26,10 +25,12 @@ func palindromeCheck(s string) bool {
 
 	left = 0
 	right = len(ss) - 1
-
 	for left < right {
 		if ss[left] != ss[right] {
 			return false
+		} else {
+			left++
+			right--
 		}
 
 	}
