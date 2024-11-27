@@ -1,28 +1,34 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
 )
 
-func main() {
-	var word string
-	fmt.Println("Enter a word : ")
-	fmt.Scanln(&word)
-	counter := make(map[string]int)
-
-	for i := 0 ; i < len(word) ; i++ {
-		ch := rune(word[i])
-		if ch >= 65 && ch <= 122 {
-			char := string(ch)
-			_, exists := counter[char]
-			if  exists {
-				counter[char] += 1
+func counterFunc() map[string]int {
 	
-			} else {
-				counter[char] = 1
-			}
+	reader := bufio.NewReader(os.Stdin)
+	
+	s , _ := reader.ReadString('\n')
+	s = strings.TrimSpace(s)
+
+	words := strings.Fields(s)
+
+	fmt.Println(words)
+
+	
+	counter := make(map[string]int)
+	for _, word := range words {
+		for _, ch := range word {
+			ch := string(ch)
+			ch = strings.ToLower(ch)
+			counter[ch]++
 		}
 	}
-	fmt.Println("The counter dictionary is " , counter)
-
+	
+	fmt.Println(counter) 
+	return counter
 }
+
