@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"task_management_mongoDB/data"
 	"task_management_mongoDB/router"
 	"time"
 
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -15,10 +18,21 @@ import (
 // MongoDB client instance
 var mongoClient *mongo.Client
 
-func main() {
-	// MongoDB connection URI
-	mongoURI := "mongodb+srv://nan:12345678Nn@cluster0.ijhfq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
+func main() {
+	
+	if err := godotenv.Load(); err != nil {
+        log.Println("No .env file found")
+    }
+	
+	mongoURI       := os.Getenv("MONGO_URI")
+	dbName         := os.Getenv("MONGO_DB_NAME")
+
+	fmt.Println(mongoURI , dbName)
+	if mongoURI == "" || dbName == "" {
+        log.Fatal("Environment variables MONGO_URI and MONGO_DB_NAME are required")
+    }
+	
 	// MongoDB client options
 	clientOptions := options.Client().ApplyURI(mongoURI)
 
@@ -41,7 +55,7 @@ func main() {
 	fmt.Println("Connected to MongoDB")
 
 	// Set the global MongoDB client
-	mongoClient = client
+	data.InitMongoDB(client, dbName)
 
 	// Defer disconnecting from MongoDB
 	defer func() {
